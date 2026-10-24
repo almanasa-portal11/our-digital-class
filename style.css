@@ -830,12 +830,13 @@ body {
         flex-shrink: 0;
     }
 }
-
-/* إخفاء الشريط العلوي في باقي الأقسام، وإظهاره فقط في الرئيسية */
+/* إخفاء الشريط العلوي تماماً في جميع الأقسام */
 .app-header {
-    display: none; 
+    display: none !important;
 }
+
+/* إظهار الشريط العلوي فقط في الصفحة الرئيسية عندما يكون الكلاس موجوداً على الـ body */
 body.at-home .app-header {
-    display: block; /* يظهر فقط في الصفحة الرئيسية */
+    display: block !important;
 }
 
