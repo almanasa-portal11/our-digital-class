@@ -815,3 +815,26 @@ body {
         gap: 8px !important;
     }
 }
+
+/* 1. جعل الشريط السفلي يتحرك أفقياً بسلاسة على الهواتف بدون انكماش */
+@media (max-width: 768px) {
+    .bottom-nav {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        -webkit-overflow-scrolling: touch;
+        gap: 8px;
+        padding: 8px 12px;
+    }
+    .bottom-nav .nav-btn {
+        flex-shrink: 0;
+    }
+}
+
+/* 2. إخفاء الشريط العلوي افتراضياً في باقي الأقسام، وإظهاره فقط في الرئيسية */
+.top-header {
+    display: none; /* مخفي في كل الأقسام عدا الرئيسية */
+}
+body.at-home .top-header {
+    display: flex; /* يظهر فقط عندما تكون الصفحة الرئيسية مفعلة */
+}
