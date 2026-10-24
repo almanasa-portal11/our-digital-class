@@ -112,8 +112,16 @@ function switchView(viewName) {
         window.event.currentTarget.classList.add("active");
     }
 
+    // إظهار أو إخفاء الشريط العلوي بناءً على ما إذا كنا في الصفحة الرئيسية أم لا
+    if (viewName === 'home') {
+        document.body.classList.add('at-home');
+    } else {
+        document.body.classList.remove('at-home');
+    }
+
     window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
 
 function renderSchedule(day) {
     const listContainer = document.getElementById("schedule-list");
