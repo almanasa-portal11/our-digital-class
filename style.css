@@ -785,3 +785,33 @@ body {
     display: block;
     margin-top: 2px;
 }
+/* --- تعديلات التناسق والتجاوب مع الهواتف المحمولة --- */
+@media (max-width: 768px) {
+    /* تقليل الهوامش العامة للشاشة لتستغل المساحة بالكامل */
+    body {
+        padding: 8px !important;
+    }
+
+    /* جعل شبكة البطاقات تظهر عمودياً (تحت بعضها) بدون تداخل */
+    .cards-grid {
+        grid-template-columns: 1fr !important;
+        gap: 12px !important;
+    }
+
+    /* تعديل مساحات العرض الداخلية */
+    .app-view {
+        padding: 10px !important;
+    }
+
+    /* تصغير العناوين قليلاً لتتناسب مع الشاشات الصغيرة */
+    .section-title {
+        font-size: 1.2rem !important;
+    }
+
+    /* ضبط أشرطة الحصص المضغوطة لتأخذ المساحة الكاملة بدون تداخل */
+    .schedule-row, .class-bar {
+        flex-direction: column !important;
+        align-items: flex-start !important;
+        gap: 8px !important;
+    }
+}
