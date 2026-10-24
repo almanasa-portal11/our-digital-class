@@ -241,12 +241,9 @@ function renderForumPosts() {
     const container = document.getElementById("forum-posts-container");
     if (!container) return;
 
-    const savedReactions = JSON.parse(localStorage.getItem("userPostReactions")) || {};
-
     container.innerHTML = "";
 
     forumPosts.forEach(post => {
-        const currentReactions = savedReactions[post.id] || { like: 0, idea: 0, grad: 0 };
         const card = document.createElement("div");
         card.className = "forum-post-card";
         card.innerHTML = `
@@ -257,21 +254,11 @@ function renderForumPosts() {
                 <span class="forum-post-time">${post.time}</span>
             </div>
             <div class="forum-post-content">${post.content}</div>
-            <div class="palestine-reactions">
-                <button class="react-btn-pal btn-pal-black" onclick="addReaction(${post.id}, 'like')">
-                    👍 <span id="react-${post.id}-like">${currentReactions.like}</span>
-                </button>
-                <button class="react-btn-pal btn-pal-green" onclick="addReaction(${post.id}, 'idea')">
-                    💡 <span id="react-${post.id}-idea">${currentReactions.idea}</span>
-                </button>
-                <button class="react-btn-pal btn-pal-red" onclick="addReaction(${post.id}, 'grad')">
-                    🎓 <span id="react-${post.id}-grad">${currentReactions.grad}</span>
-                </button>
-            </div>
         `;
         container.appendChild(card);
     });
 }
+
 
 function addReaction(postId, type) {
     let savedReactions = JSON.parse(localStorage.getItem("userPostReactions")) || {};
