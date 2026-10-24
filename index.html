@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>شعبتنا الرقمية | Our Digital Class</title>
+    
+    <!-- ربط ملف التصميم -->
+    <link rel="stylesheet" href="style.css">
+    <!-- ربط خط كايير (Cairo) -->
+    <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#1b365d">
+</head>
+<body>
+
+    <!-- شريط التنبيهات العلوي -->
+
+    <header class="app-header">
+    <div class="header-top-bar">
+        <div class="site-emblem" style="display: flex; align-items: center; gap: 8px;">
+            <!-- هنا الكود يبحث عن الصورة icon.png ويعرضها -->
+            <img src="icon.png" alt="شعار الشعبة" style="width: 26px; height: 26px; border-radius: 6px; object-fit: cover;">
+            <span>البوابة الأكاديمية الرسمية</span>
+        </div>
+        <div class="badge-section">الصف 11 علمي (جـ + د)</div>
+    </div>
+    
+    <h1 class="main-site-title">شعبتنا الرقمية</h1>
+    <p class="site-subtitle">المرجع الموحد للجدول الدراسي، الواجبات، والتعاميم الرسمية</p>
+</header>
+
+    <!-- محتوى الصفحات (التبويبات المتعددة) -->
+    <main class="container main-content">
+        
+        <!-- شريط العد التنازلي للامتحانات النهائية -->
+        <div class="countdown-banner">
+            <div class="countdown-title">⏳ المتبقي على الامتحانات النهائية:</div>
+            <div class="countdown-timer" id="exam-countdown">جاري الحساب...</div>
+        </div>
+
+        <!-- 1. الصفحة الرئيسية (Home View) -->
+        <section class="app-view active" id="view-home">
+            <div class="section-block">
+                <h2 class="section-title">أهلاً بكم في شعبتنا</h2>
+                
+                
+
+                <!-- شبكة الاختصارات الرئيسية -->
+                <div class="cards-grid">
+                    <div class="card nav-shortcut" onclick="switchView('schedule')">
+                        <h3>جدول الحصص</h3>
+                        <p>مواعيد الحصص اليومية وروابط اللقاءات المباشرة.</p>
+                    </div>
+                    <div class="card nav-shortcut" onclick="switchView('homework')">
+                        <h3>الواجبات والتكليفات</h3>
+                        <p>متابعة المواد الدراسية ومواعيد التسليم.</p>
+                    </div>
+                    <div class="card nav-shortcut" onclick="switchView('teachers')">
+                        <h3>المدرسون والمواد</h3>
+                        <p>أسماء المعلمين ومتابعة التواصل.</p>
+                    </div>
+                    <div class="card nav-shortcut" onclick="switchView('services')">
+                        <h3>الخدمات والمساعدة</h3>
+                        <p>شروحات المنصات والكتب والدعم الفني.</p>
+                    </div>
+                    <div class="card nav-shortcut" onclick="switchView('forum')" style="border-color: #059669; background: #f0fdf4;">
+                        <h3 style="color: #059669;">📢 منتدى الشعبة والإعلانات</h3>
+                        <p>التعاميم الرسمية والتفاعلات بألوان علم فلسطين 🇵🇸.</p>
+                    </div>
+                </div>
+
+                
+<div style="text-align: center; margin-top: 30px; padding: 15px; font-size: 0.85rem; color: var(--text-muted); border-top: 1px solid var(--border-color);">
+    Created by Hasan Abu Draz
+</div>
+            </div>
+        </section>
+
+        <!-- 2. صفحة جدول الحصص (Schedule View) -->
+        <section class="app-view" id="view-schedule">
+            <div class="section-block">
+                <div class="section-header-flex">
+                    <h2 class="section-title">جدول الحصص الأسبوعي</h2>
+                    <span class="today-indicator" id="current-day-badge">اليوم: ...</span>
+                </div>
+
+                <div class="days-tabs" id="days-tabs">
+                    <button class="day-tab" data-day="Sunday">الأحد</button>
+                    <button class="day-tab" data-day="Monday">الإثنين</button>
+                    <button class="day-tab" data-day="Tuesday">الثلاثاء</button>
+                    <button class="day-tab" data-day="Wednesday">الأربعاء</button>
+                    <button class="day-tab" data-day="Thursday">الخميس</button>
+                </div>
+
+                <div class="schedule-list" id="schedule-list">
+                    <!-- يتم تحميل الحصص هنا -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 3. صفحة الواجبات (Homework View) -->
+        <section class="app-view" id="view-homework">
+            <div class="section-block">
+                <h2 class="section-title">الواجبات والتكليفات اليومية</h2>
+                <div class="homework-list" id="homework-list">
+                    <!-- يتم تحميل الواجبات هنا -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. صفحة المنتدى الإخباري (Forum View) -->
+        <section class="app-view" id="view-forum">
+            <div class="section-block">
+                <div class="section-header-flex">
+                    <h2 class="section-title">منتدى الشعبة والإعلانات 🇵🇸</h2>
+                    <span class="today-indicator">منشورات رسمية</span>
+                </div>
+
+                <!-- قائمة منشورات المنتدى -->
+                <div id="forum-posts-container" style="display: flex; flex-direction: column; gap: 20px;">
+                    <!-- يتم تحميل منشورات المنتدى تلقائياً عبر JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 5. صفحة المدرسين (Teachers View) -->
+        <section class="app-view" id="view-teachers">
+            <div class="section-block">
+                <h2 class="section-title">قائمة المعلمين والمواد</h2>
+                <div class="cards-grid" id="teachers-grid">
+                    <!-- يتم تحميل المعلمين هنا -->
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. صفحة الخدمات (Services View) -->
+        <section class="app-view" id="view-services">
+            <div class="section-block">
+                <h2 class="section-title">المساعدة والخدمات التعليمية</h2>
+                
+                <div class="service-stack" style="display: flex; flex-direction: column; gap: 15px;">
+                    
+                    <!-- موقع مدرستي الالكتروني (الايسكول) -->
+                    <div class="card">
+                        <h3>موقع مدرستي الإلكتروني (الايسكول)</h3>
+                        <p>لمتابعة بيانات الطالب، المدرسة، الصف، الشعبة، والشهادات المدرسية للسنوات الثلاث الماضية. (يُفتح عبر متصفح جوجل؛ تطبيق الجوال متوقف).</p>
+                        <div style="margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <a href="https://youtu.be/n9R_fWmcfwg?si=dfn-dhPHRRcxvVJy" target="_blank" class="service-link-btn">فيديو توضيحي</a>
+                            <a href="https://moe.edu.ps/m/3784" target="_blank" class="service-link-btn">ملف الإرشادات</a>
+                        </div>
+                    </div>
+
+                    <!-- منصة التيمز -->
+                    <div class="card">
+                        <h3>منصة التيمز (Microsoft Teams)</h3>
+                        <p>مخصصة للانضمام للحصص الإلكترونية حسب الجدول، وأداء الاختبارات والواجبات وأوراق العمل المنشورة من المعلمين.</p>
+                        <div style="margin-top: 12px; display: flex; gap: 10px; flex-wrap: wrap;">
+                            <a href="https://youtu.be/JoWIxwSI74I?si=rtfn5zEHRs7vlr74" target="_blank" class="service-link-btn">فيديو توضيحي</a>
+                            <a href="https://moe.edu.ps/m/3783" target="_blank" class="service-link-btn">ملف الإرشادات</a>
+                        </div>
+                    </div>
+
+                    <!-- موقع الدعم الفني -->
+                    <div class="card">
+                        <h3>موقع الدعم الفني لطلاب غزة</h3>
+                        <p>مخصص لتقديم الخدمات الإلكترونية، رفع التذاكر لحل مشاكل (ايسكول/تيمز)، وتسجيل الطلاب الجدد.</p>
+                        <div style="margin-top: 12px;">
+                            <a href="https://gaza.moe.edu.ps" target="_blank" class="service-link-btn" style="background-color: var(--color-alert); color: #fff;">زيارة موقع الدعم الفني</a>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. واجهة تسجيلات الحصص (Recordings View) - مستقلة وصحيحة -->
+        <section class="app-view" id="view-recordings">
+            <div class="section-block">
+                <h2 class="section-title">🎥 تسجيلات الحصص والدروس</h2>
+                <div class="card">
+                    <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+                        شاهد تسجيلات الحصص والدروس المباشرة المرفوعة عبر جدول المتابعة.
+                    </p>
+                    <div id="recordings-list" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 15px;">
+                        <!-- يتم تحميل الفيديوهات هنا تلقائياً من جوجل شيت -->
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- أيقونة التواصل والبلاغات العائمة في الزاوية السفلى -->
+    <div class="floating-support" id="support-btn" onclick="toggleSupportModal()">
+        💬 <span class="support-badge">تواصل / بلاغ</span>
+    </div>
+
+    <!-- نافذة التواصل المباشر مع المسؤول -->
+    <div class="modal-overlay" id="support-modal">
+        <div class="modal-card">
+            <button class="modal-close" onclick="toggleSupportModal()">&times;</button>
+            <h3>التواصل المباشر مع المسؤول</h3>
+            <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 12px;">أرسل استفسارك أو بلاغك وسيصل مباشرة لإدارة الشعبة.</p>
+            
+            <form id="support-form" onsubmit="handleSupportSubmit(event)">
+                <input type="hidden" name="access_key" value="41096fff-c4e1-484c-980b-8ad86c9f0c42">
+                <input type="hidden" name="subject" value="بلاغ جديد من موقع شعبتنا الرقمية (جـ + د)">
+                <input type="hidden" name="from_name" value="شعبتنا الرقمية">
+
+                <input type="text" id="report-name" name="student_name" placeholder="اسمك الكامل" required style="width:100%; padding:8px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;">
+                <textarea id="report-msg" name="report_message" placeholder="اكتب تفاصيل الرسالة أو البلاغ هنا..." required style="width:100%; padding:8px; height:80px; margin-bottom:8px; border:1px solid #ccc; border-radius:6px;"></textarea>
+                
+                <button type="submit" id="submit-report-btn" class="btn-join-teams" style="border:none; cursor:pointer; width:100%;">إرسال البلاغ للمسؤول</button>
+            </form>
+            <div id="support-form-result" style="display:none; margin-top:10px; font-weight:700; text-align:center;"></div>
+        </div>
+    </div>
+
+    <!-- شريط التنقل السفلي -->
+    <nav class="bottom-nav">
+        <button class="nav-btn active" onclick="switchView('home')">الرئيسية</button>
+        <button class="nav-btn" onclick="switchView('schedule')">الجدول</button>
+        <button class="nav-btn" onclick="switchView('homework')">الواجبات</button>
+        <button class="nav-btn" onclick="switchView('forum')">المنتدى</button>
+        <button class="nav-btn" onclick="switchView('teachers')">المدرسين</button>
+        <button class="nav-btn" onclick="switchView('services')">الخدمات</button>
+        <button class="nav-btn" onclick="switchView('recordings')">
+            <span class="nav-icon">🎥</span>
+            <span class="nav-label">التسجيلات</span>
+        </button>
+    </nav>
+
+    <!-- النافذة المنبثقة لتفاصيل الحصة -->
+    <div class="modal-overlay" id="class-modal">
+        <div class="modal-card">
+            <button class="modal-close" id="close-modal">&times;</button>
+            <div class="modal-header">
+                <span class="badge-tag" id="modal-section-badge">الشعبة جـ + د</span>
+                <h3 id="modal-subject-title">اسم المادة</h3>
+            </div>
+            <div class="modal-body">
+                <div class="info-row">
+                    <span class="info-label">المدرس:</span>
+                    <span class="info-value" id="modal-teacher">أ. اسم المدرس</span>
+                </div>
+                <div class="info-row">
+                    <span class="info-label">التوقيت:</span>
+                    <span class="info-value" id="modal-time">08:00 صباحاً</span>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <a href="https://teams.microsoft.com/meet/389003714760497?p=XkQG3P98ySlSeiD3YS" target="_blank" class="btn-join-teams">
+                    دخول الحصة المباشرة عبر Teams
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
