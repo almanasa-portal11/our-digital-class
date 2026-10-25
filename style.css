@@ -840,3 +840,351 @@ body.at-home .app-header {
     display: block !important;
 }
 
+/* ==========================================================================
+   تحسينات الهواتف المحمولة
+   الصق هذا الجزء كما هو في آخر ملف الـ CSS (بعد آخر سطر) دون حذف أي شيء
+   ========================================================================== */
+
+html {
+    -webkit-text-size-adjust: 100%;
+}
+
+img, video, iframe {
+    max-width: 100%;
+}
+
+/* --------------------------------------------------------------------------
+   الهواتف والأجهزة اللوحية الصغيرة (حتى 768px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 768px) {
+
+    /* منع التمرير الأفقي */
+    html, body {
+        overflow-x: hidden;
+        width: 100%;
+    }
+
+    /* إصلاح: القاعدة السابقة (padding: 8px !important) كانت تلغي المسافة السفلية
+       فيغطي الشريط السفلي آخر المحتوى. هنا نرجّع المسافة مع دعم شريط الآيفون */
+    body {
+        padding: 8px 8px calc(84px + env(safe-area-inset-bottom, 0px)) !important;
+        background-size: 20px 20px;
+    }
+
+    .container {
+        padding: 0 12px;
+    }
+
+    .main-content {
+        padding: 20px 8px;
+    }
+
+    .section-block {
+        margin-bottom: 28px;
+    }
+
+    .app-view {
+        padding: 6px !important;
+    }
+
+    .section-title {
+        font-size: 1.15rem !important;
+        margin-bottom: 14px;
+    }
+
+    /* ---------- الترويسة ---------- */
+    .alert-bar {
+        font-size: 0.85rem;
+        padding: 8px 12px;
+    }
+
+    .academic-header {
+        padding: 30px 16px;
+    }
+
+    .academic-header h1 {
+        font-size: 1.6rem;
+    }
+
+    .app-header {
+        padding: 18px 14px;
+        border-bottom-left-radius: 20px;
+        border-bottom-right-radius: 20px;
+    }
+
+    .header-top-bar {
+        flex-wrap: wrap;
+        gap: 8px;
+        font-size: 0.78rem;
+        margin-bottom: 10px;
+    }
+
+    .site-emblem,
+    .badge-section {
+        padding: 4px 10px;
+    }
+
+    .main-site-title {
+        font-size: 1.6rem;
+        line-height: 1.4;
+    }
+
+    .site-subtitle {
+        font-size: 0.85rem;
+    }
+
+    /* ---------- البطاقات ---------- */
+    .card {
+        padding: 16px;
+    }
+
+    .card-icon {
+        font-size: 1.7rem;
+        margin-bottom: 8px;
+    }
+
+    .card h3 {
+        font-size: 1.05rem;
+    }
+
+    .card p {
+        overflow-wrap: anywhere;
+    }
+
+    /* ---------- جدول الحصص ---------- */
+    .section-header-flex {
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .today-indicator {
+        font-size: 0.8rem;
+        padding: 5px 12px;
+    }
+
+    .days-tabs {
+        gap: 6px;
+        padding-bottom: 6px;
+        -webkit-overflow-scrolling: touch;
+        scrollbar-width: none;
+    }
+
+    .days-tabs::-webkit-scrollbar {
+        display: none;
+    }
+
+    .day-tab {
+        padding: 10px 16px;
+        min-height: 42px;
+        font-size: 0.9rem;
+        flex-shrink: 0;
+    }
+
+    .period-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 10px;
+        padding: 14px;
+    }
+
+    .period-info h4 {
+        font-size: 1rem;
+    }
+
+    .period-info p {
+        font-size: 0.82rem;
+        line-height: 1.7;
+        overflow-wrap: anywhere;
+    }
+
+    .period-time {
+        align-self: flex-start;
+        white-space: normal;
+        font-size: 0.88rem;
+        padding: 6px 12px;
+    }
+
+    /* ---------- النافذة المنبثقة ---------- */
+    .modal-overlay {
+        padding: 12px;
+    }
+
+    .modal-card {
+        padding: 22px 18px;
+        max-height: calc(100vh - 24px);
+        max-height: calc(100dvh - 24px);
+        overflow-y: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .modal-close {
+        font-size: 1.7rem;
+        padding: 6px 10px;
+        top: 8px;
+        left: 8px;
+    }
+
+    .modal-header h3 {
+        font-size: 1.2rem;
+        padding-left: 28px;
+    }
+
+    .modal-body {
+        margin: 14px 0;
+    }
+
+    .info-row {
+        flex-wrap: wrap;
+        gap: 4px 12px;
+        font-size: 0.9rem;
+    }
+
+    .btn-join-teams {
+        min-height: 46px;
+        padding: 14px;
+    }
+
+    /* ---------- الواجبات ---------- */
+    .homework-item {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 12px;
+        padding: 14px;
+    }
+
+    .hw-info h4,
+    .hw-info p {
+        overflow-wrap: anywhere;
+    }
+
+    .btn-toggle-hw {
+        width: 100%;
+        min-height: 44px;
+        padding: 10px 16px;
+    }
+
+    /* ---------- العد التنازلي ---------- */
+    .countdown-banner {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+        padding: 14px 12px;
+        text-align: center;
+    }
+
+    .countdown-timer,
+    #exam-countdown {
+        width: 100%;
+        background: transparent;
+        padding: 0;
+        border-radius: 0;
+        letter-spacing: normal;
+    }
+
+    /* ---------- المنتدى ---------- */
+    .forum-post-card {
+        padding: 14px;
+    }
+
+    .forum-post-header {
+        flex-wrap: wrap;
+        gap: 6px;
+    }
+
+    .forum-post-content {
+        font-size: 0.92rem;
+        overflow-wrap: anywhere;
+    }
+
+    .palestine-reactions {
+        gap: 6px;
+    }
+
+    .react-btn-pal,
+    .palestine-react-btn {
+        padding: 8px 12px;
+        font-size: 0.8rem;
+        min-height: 38px;
+    }
+
+    /* ---------- التسجيلات ---------- */
+    .recording-card {
+        padding: 12px;
+    }
+
+    /* ---------- الشريط السفلي والزر العائم ---------- */
+    .bottom-nav {
+        padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px));
+        scrollbar-width: none;
+    }
+
+    .bottom-nav::-webkit-scrollbar {
+        display: none;
+    }
+
+    .bottom-nav .nav-btn {
+        min-height: 44px;
+        padding: 8px 14px;
+        font-size: 0.82rem;
+    }
+
+    .floating-support {
+        bottom: calc(76px + env(safe-area-inset-bottom, 0px));
+        left: 12px;
+        padding: 10px 14px;
+        font-size: 0.82rem;
+    }
+
+    /* منع تكبير الصفحة تلقائياً في الآيفون عند الضغط على حقول الإدخال */
+    input,
+    select,
+    textarea {
+        font-size: 16px !important;
+        max-width: 100%;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   الهواتف الصغيرة جداً (حتى 400px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 400px) {
+    .main-site-title {
+        font-size: 1.4rem;
+    }
+
+    .card {
+        padding: 14px;
+    }
+
+    .day-tab {
+        padding: 9px 13px;
+        font-size: 0.85rem;
+    }
+
+    .period-time {
+        font-size: 0.82rem;
+    }
+
+    .bottom-nav .nav-btn {
+        padding: 8px 11px;
+        font-size: 0.78rem;
+    }
+
+    .floating-support {
+        padding: 9px 12px;
+        font-size: 0.78rem;
+    }
+}
+
+/* --------------------------------------------------------------------------
+   أجهزة اللمس: إلغاء حركات الـ hover التي تسبب اهتزاز أو التصاق عند اللمس
+   -------------------------------------------------------------------------- */
+@media (hover: none) {
+    .card:hover,
+    .period-item:hover,
+    .react-btn-pal:hover,
+    .floating-support:hover,
+    .service-link-btn:hover {
+        transform: none;
+    }
+}
