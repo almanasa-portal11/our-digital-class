@@ -45,14 +45,14 @@ const forumPosts = [
         id: 101,
         author: "مسؤول الشعبة",
         time: "إعلان رسمي",
-        content: "📢 أهلاً وسهلاً بجميع طلاب شعبتنا (جـ + د) في موقعنا الموحد. نرجو المتابعة اليومية لجدول الحصص والواجبات.",
+        content: "أهلاً وسهلاً بجميع طلاب شعبتنا (جـ + د) في موقعنا الموحد. نرجو المتابعة اليومية لجدول الحصص والواجبات.",
         reactions: { like: 0, idea: 0, grad: 0 }
     },
     {
         id: 102,
         author: "مسؤول الشعبة",
         time: "إعلان رسمي",
-        content: "📝 تذكير: تم إرفاق جميع روابط ودلائل استخدام منصة التيمز والايسكول والموقع التقني في قسم الخدمات والمساعدة.",
+        content: "تذكير: تم إرفاق جميع روابط ودلائل استخدام منصة التيمز والايسكول والموقع التقني في قسم الخدمات والمساعدة.",
         reactions: { like: 0, idea: 0, grad: 0 }
     }
 ];
@@ -61,6 +61,99 @@ const dayNamesAr = {
     Sunday: "الأحد", Monday: "الإثنين", Tuesday: "الثلاثاء",
     Wednesday: "الأربعاء", Thursday: "الخميس", Friday: "الجمعة", Saturday: "السبت"
 };
+
+// ====================================================================
+// تحويل التوقيت: الأوقات المكتوبة أعلاه بتوقيت فلسطين (بعد الظهر)
+// ويتم عرضها حسب توقيت جوال/جهاز الطالب تلقائياً
+// ====================================================================
+const SCHOOL_TZ = "Asia/Gaza";
+const weekdayIndex = { Sunday: 0, Monday: 1, Tuesday: 2, Wednesday: 3, Thursday: 4, Friday: 5, Saturday: 6 };
+
+// فرق التوقيت (بالميلي ثانية) بين منطقة زمنية معينة وUTC في لحظة محددة
+function getTzOffsetMs(utcMs, timeZone) {
+    const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: timeZone,
+        hourCycle: "h23",
+        year: "numeric", month: "2-digit", day: "2-digit",
+        hour: "2-digit", minute: "2-digit", second: "2-digit"
+    }).formatToParts(new Date(utcMs));
+
+    const p = {};
+    parts.forEach(x => { if (x.type !== "literal") p[x.type] = Number(x.value); });
+
+    const asUTC = Date.UTC(p.year, p.month - 1, p.day, p.hour % 24, p.minute, p.second);
+    return asUTC - Math.floor(utcMs / 1000) * 1000;
+}
+
+// تحويل وقت حائطي (بتوقيت فلسطين) في تاريخ معين إلى لحظة زمنية حقيقية (Date)
+function schoolWallTimeToDate(y, m, d, hh, mm) {
+    const guess = Date.UTC(y, m, d, hh, mm);
+    let result = guess - getTzOffsetMs(guess, SCHOOL_TZ);
+    result = guess - getTzOffsetMs(result, SCHOOL_TZ); // إعادة الفحص لدعم التوقيت الصيفي
+    return new Date(result);
+}
+
+// تاريخ اليوم الحالي ويوم الأسبوع حسب توقيت فلسطين
+function getSchoolToday() {
+    const parts = new Intl.DateTimeFormat("en-US", {
+        timeZone: SCHOOL_TZ,
+        year: "numeric", month: "2-digit", day: "2-digit"
+    }).formatToParts(new Date());
+
+    const p = {};
+    parts.forEach(x => { if (x.type !== "literal") p[x.type] = Number(x.value); });
+
+    return {
+        y: p.year,
+        m: p.month - 1,
+        d: p.day,
+        weekday: new Date(Date.UTC(p.year, p.month - 1, p.day)).getUTCDay()
+    };
+}
+
+// تحويل نص الوقت مثل "02:40 - 03:30" إلى توقيت جهاز الطالب
+function convertScheduleTime(range, dayName) {
+    try {
+        const idx = weekdayIndex[dayName];
+        if (idx === undefined || !range) return range;
+
+        // أقرب تاريخ قادم (أو اليوم) لهذا اليوم من الأسبوع
+        const today = getSchoolToday();
+        const ahead = (idx - today.weekday + 7) % 7;
+        const base = new Date(Date.UTC(today.y, today.m, today.d + ahead));
+        const by = base.getUTCFullYear();
+        const bm = base.getUTCMonth();
+        const bd = base.getUTCDate();
+        const baseDayMs = Date.UTC(by, bm, bd);
+
+        const formatOne = (t) => {
+            const [h, m] = t.trim().split(":").map(Number);
+            if (isNaN(h) || isNaN(m)) throw new Error("bad time");
+            const hh24 = h < 12 ? h + 12 : h; // الحصص بعد الظهر
+            const dt = schoolWallTimeToDate(by, bm, bd, hh24, m);
+
+            const lh = dt.getHours();
+            const lm = dt.getMinutes();
+            const h12 = lh % 12 || 12;
+            const suffix = lh < 12 ? "ص" : "م";
+
+            const dayDiff = Math.round(
+                (Date.UTC(dt.getFullYear(), dt.getMonth(), dt.getDate()) - baseDayMs) / 86400000
+            );
+            let note = "";
+            if (dayDiff > 0) note = " (اليوم التالي)";
+            else if (dayDiff < 0) note = " (اليوم السابق)";
+
+            return `${String(h12).padStart(2, "0")}:${String(lm).padStart(2, "0")} ${suffix}${note}`;
+        };
+
+        const pieces = range.split("-");
+        if (pieces.length !== 2) return range;
+        return `${formatOne(pieces[0])} - ${formatOne(pieces[1])}`;
+    } catch (e) {
+        return range; // في حال أي خطأ نعرض الوقت الأصلي كما هو
+    }
+}
 
 document.addEventListener("DOMContentLoaded", () => {
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
@@ -142,17 +235,17 @@ function renderSchedule(day) {
                 <h4>${p.subject}</h4>
                 <p>المعلم: ${p.teacher} | الشعبة: ${p.section}</p>
             </div>
-            <div class="period-time">${p.time}</div>
+            <div class="period-time">${convertScheduleTime(p.time, day)}</div>
         `;
-        item.addEventListener("click", () => openModal(p));
+        item.addEventListener("click", () => openModal(p, day));
         listContainer.appendChild(item);
     });
 }
 
-function openModal(period) {
+function openModal(period, day) {
     document.getElementById("modal-subject-title").textContent = period.subject;
     document.getElementById("modal-teacher").textContent = period.teacher;
-    document.getElementById("modal-time").textContent = period.time;
+    document.getElementById("modal-time").textContent = day ? convertScheduleTime(period.time, day) : period.time;
     document.getElementById("class-modal").classList.add("active");
 }
 
@@ -283,32 +376,124 @@ function addReaction(postId, type) {
     }
 }
 
-function startExamCountdown() {
-    const currentYear = new Date().getFullYear();
-    let targetDate = new Date(`December 28, ${currentYear} 08:00:00`).getTime();
-    
-    if (new Date().getTime() > targetDate) {
-        targetDate = new Date(`December 28, ${currentYear + 1} 08:00:00`).getTime();
-    }
+// ====================================================================
+// العد التنازلي للامتحانات النهائية (28 ديسمبر الساعة 08:00 بتوقيت فلسطين)
+// عرض رسمي ضمن مربعات رقمية: أيام / ساعات / دقائق / ثواني
+// ====================================================================
+function injectCountdownStyles() {
+    if (document.getElementById("exam-countdown-styles")) return;
 
+    const style = document.createElement("style");
+    style.id = "exam-countdown-styles";
+    style.textContent = `
+        .cd-wrap {
+            display: flex;
+            justify-content: center;
+            align-items: stretch;
+            gap: 10px;
+            direction: rtl;
+            margin: 8px 0;
+            width: 100%;
+        }
+        .cd-box {
+            flex: 1 1 0;
+            min-width: 54px;
+            max-width: 90px;
+            padding: 12px 4px 10px;
+            text-align: center;
+            background: linear-gradient(180deg, #1e3a8a 0%, #172554 100%);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            border-radius: 12px;
+            box-shadow: 0 6px 16px rgba(15, 23, 42, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.12);
+        }
+        .cd-num {
+            display: block;
+            direction: ltr;
+            font-size: 1.8rem;
+            font-weight: 700;
+            line-height: 1.1;
+            letter-spacing: 1px;
+            color: #ffffff;
+            font-variant-numeric: tabular-nums;
+            font-family: "Segoe UI", "Roboto", "Helvetica Neue", Arial, sans-serif;
+        }
+        .cd-label {
+            display: block;
+            margin-top: 8px;
+            padding-top: 6px;
+            border-top: 1px solid rgba(255, 255, 255, 0.18);
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #cbd5e1;
+        }
+        .cd-finished {
+            text-align: center;
+            font-weight: 700;
+            padding: 12px;
+        }
+        @media (max-width: 380px) {
+            .cd-wrap { gap: 6px; }
+            .cd-num { font-size: 1.4rem; }
+            .cd-label { font-size: 0.68rem; }
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function startExamCountdown() {
     const timerElem = document.getElementById("exam-countdown");
     if (!timerElem) return;
 
-    setInterval(() => {
+    injectCountdownStyles();
+
+    // موعد الامتحان: 28 ديسمبر 08:00 صباحاً بتوقيت فلسطين (لحظة زمنية واحدة لكل الطلاب)
+    const currentYear = new Date().getFullYear();
+    let targetDate = schoolWallTimeToDate(currentYear, 11, 28, 8, 0).getTime();
+
+    if (new Date().getTime() > targetDate) {
+        targetDate = schoolWallTimeToDate(currentYear + 1, 11, 28, 8, 0).getTime();
+    }
+
+    // بناء المربعات مرة واحدة ثم تحديث الأرقام فقط
+    timerElem.innerHTML = `
+        <div class="cd-wrap">
+            <div class="cd-box"><span class="cd-num" id="cd-days">00</span><span class="cd-label">يوم</span></div>
+            <div class="cd-box"><span class="cd-num" id="cd-hours">00</span><span class="cd-label">ساعة</span></div>
+            <div class="cd-box"><span class="cd-num" id="cd-minutes">00</span><span class="cd-label">دقيقة</span></div>
+            <div class="cd-box"><span class="cd-num" id="cd-seconds">00</span><span class="cd-label">ثانية</span></div>
+        </div>
+    `;
+
+    const pad = (n) => String(n).padStart(2, "0");
+
+    function updateCountdown() {
         const now = new Date().getTime();
         const distance = targetDate - now;
 
         if (distance < 0) {
-            timerElem.textContent = "بدأت الامتحانات اليوم!";
+            timerElem.innerHTML = `<div class="cd-finished">بدأت الامتحانات اليوم!</div>`;
+            clearInterval(countdownInterval);
             return;
         }
 
         const days = Math.floor(distance / (1000 * 60 * 60 * 24));
         const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
         const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-        timerElem.textContent = `${days} يوم و ${hours} ساعة و ${minutes} دقيقة`;
-    }, 1000);
+        const dEl = document.getElementById("cd-days");
+        const hEl = document.getElementById("cd-hours");
+        const mEl = document.getElementById("cd-minutes");
+        const sEl = document.getElementById("cd-seconds");
+
+        if (dEl) dEl.textContent = pad(days);
+        if (hEl) hEl.textContent = pad(hours);
+        if (mEl) mEl.textContent = pad(minutes);
+        if (sEl) sEl.textContent = pad(seconds);
+    }
+
+    const countdownInterval = setInterval(updateCountdown, 1000);
+    updateCountdown(); // عرض فوري بدون انتظار الثانية الأولى
 }
 
 
