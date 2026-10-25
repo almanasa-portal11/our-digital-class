@@ -21,7 +21,21 @@
       appId: "d6673241-0906-4c56-978a-77b984636918",
       serviceWorkerPath: "our-digital-class/OneSignalSDKWorker.js",
       serviceWorkerParam: { scope: "/our-digital-class/" },
-      notifyButton: { enable: true, offset: { bottom: "80px", right: "15px", left: "0px" } }
+      notifyButton: { enable: true, offset: { bottom: "80px", right: "15px", left: "0px" } },
+      promptOptions: {
+        slidedown: {
+          prompts: [{
+            type: "push",
+            autoPrompt: true,
+            text: {
+              actionMessage: "فعّل الإشعارات ليصلك تنبيه قبل بداية كل حصة وعند إضافة واجب جديد",
+              acceptButton: "تفعيل",
+              cancelButton: "لاحقاً"
+            },
+            delay: { pageViews: 1, timeDelay: 3 }
+          }]
+        }
+      }
     });
   });
 </script>
