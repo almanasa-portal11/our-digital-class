@@ -6,7 +6,7 @@
     <title>شعبتنا الرقمية | Our Digital Class</title>
     
     <!-- ربط ملف التصميم -->
-<link rel="stylesheet" href="style.css?v=6">
+<link rel="stylesheet" href="style.css?v=7">
     <!-- ربط خط كايير (Cairo) -->
     <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700&display=swap" rel="stylesheet">
     
@@ -26,17 +26,24 @@
         slidedown: {
           prompts: [{
             type: "push",
-            autoPrompt: true,
+            autoPrompt: false,
             text: {
               actionMessage: "فعّل الإشعارات ليصلك تنبيه قبل بداية كل حصة وعند إضافة واجب جديد",
               acceptButton: "تفعيل",
               cancelButton: "لاحقاً"
-            },
-            delay: { pageViews: 1, timeDelay: 3 }
+            }
           }]
         }
       }
     });
+
+    // إظهار طلب التفعيل لكل من ليس مشتركاً
+    var denied = (typeof Notification !== "undefined" && Notification.permission === "denied");
+    if (!OneSignal.User.PushSubscription.optedIn && !denied) {
+      setTimeout(function () {
+        OneSignal.Slidedown.promptPush({ force: true });
+      }, 3000);
+    }
   });
 </script>
     
@@ -287,6 +294,6 @@
         </div>
     </div>
 
-<script src="script.js?v=6"></script>
+<script src="script.js?v=7"></script>
 </body>
 </html>
