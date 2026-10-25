@@ -12,6 +12,18 @@
     
     <link rel="manifest" href="manifest.json">
     <meta name="theme-color" content="#1b365d">
+
+    <script src="https://cdn.onesignal.com/sdks/web/v16/OneSignalSDK.page.js" defer></script>
+<script>
+  window.OneSignalDeferred = window.OneSignalDeferred || [];
+  OneSignalDeferred.push(async function(OneSignal) {
+    await OneSignal.init({
+      appId: "d6673241-0906-4c56-978a-77b984636918",
+      notifyButton: { enable: true, offset: { bottom: "80px", right: "15px", left: "0px" } }
+    });
+  });
+</script>
+    
 </head>
     <body class="at-home">
 
