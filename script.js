@@ -554,8 +554,10 @@ function renderTeachers() {
         card.innerHTML = `
             <h3>${t.subject}</h3>
             <p><strong>المعلم:</strong> ${t.name}</p>
-            <p style="font-size: 0.85rem; color: var(--accent-blue); margin-top: 8px; word-break: break-all;">
-                <strong>تيمز:</strong> ${t.email}
+            <p style="font-size: 0.85rem; margin-top: 8px; word-break: break-all;">
+                <strong>تيمز:</strong>
+                <a href="https://teams.microsoft.com/l/chat/0/0?users=${t.email}" target="_blank" rel="noopener"
+                   style="color: var(--accent-blue); text-decoration: underline;">💬 ${t.email}</a>
             </p>
         `;
         grid.appendChild(card);
