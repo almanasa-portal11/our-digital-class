@@ -88,26 +88,6 @@ let currentSection = sections[DEFAULT_SECTION];
 let teachersData = currentSection.teachers;
 let weeklySchedule = buildWeeklySchedule(currentSection);
 
-// منشورات المنتدى الرسمية
-const forumPosts = [
-    {
-        id: 101,
-        author: "مسؤول الشعبة",
-        time: "إعلان رسمي",
-        section: "all",
-        content: "📢 أهلاً وسهلاً بجميع طلاب الشعبتين (جـ + د) و (ه + و) في موقعنا الموحد. نرجو المتابعة اليومية لجدول الحصص والواجبات.",
-        reactions: { like: 0, idea: 0, grad: 0 }
-    },
-    {
-        id: 102,
-        author: "مسؤول الشعبة",
-        time: "إعلان رسمي",
-        section: "all",
-        content: "📝 تذكير: تم إرفاق جميع روابط ودلائل استخدام منصة التيمز والايسكول والموقع التقني في قسم الخدمات والمساعدة.",
-        reactions: { like: 0, idea: 0, grad: 0 }
-    }
-];
-
 const dayNamesAr = {
     Sunday: "الأحد", Monday: "الإثنين", Tuesday: "الثلاثاء",
     Wednesday: "الأربعاء", Thursday: "الخميس", Friday: "الجمعة", Saturday: "السبت"
@@ -582,28 +562,73 @@ function renderTeachers() {
     });
 }
 
-function renderForumPosts() {
+// رابط الـ CSV المباشر لجدول المنتدى (الأعمدة: الرقم | الكاتب | التاريخ | النص | الشعبة)
+const FORUM_SHEET_CSV_URL = "https://docs.google.com/spreadsheets/d/1HyzJyeEG1GirQhkrZUHvK1nqacKg1qlPwE53-iS2kUk/export?format=csv";
+
+// تحويل النص إلى HTML آمن مع الحفاظ على الأسطر وجعل الروابط قابلة للنقر
+function formatForumText(text) {
+    const escaped = String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+    return escaped
+        .replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" target="_blank" rel="noopener">$1</a>')
+        .replace(/\r?\n/g, "<br>");
+}
+
+function escapeText(text) {
+    return String(text || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;");
+}
+
+async function renderForumPosts() {
     const container = document.getElementById("forum-posts-container");
     if (!container) return;
 
-    container.innerHTML = "";
+    container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding:15px;'>جاري تحميل المنشورات...</p>";
 
-    forumPosts
-        .filter(post => !post.section || post.section === "all" || post.section === currentSectionKey)
-        .forEach(post => {
-        const card = document.createElement("div");
-        card.className = "forum-post-card";
-        card.innerHTML = `
-            <div class="forum-post-header">
-                <div>
-                    <span class="admin-badge">${post.author}</span>
+    try {
+        const response = await fetch(FORUM_SHEET_CSV_URL);
+        const data = await response.text();
+        const rows = parseCSV(data).slice(1);
+
+        const posts = rows
+            .map(cols => ({
+                author: (cols[1] || "").trim(),
+                time: (cols[2] || "").trim(),
+                content: (cols[3] || "").trim(),
+                section: cols[4]
+            }))
+            .filter(post => post.content && matchesSection(post.section))
+            .reverse(); // الأحدث (آخر صف في الشيت) يظهر في الأعلى
+
+        container.innerHTML = "";
+
+        if (posts.length === 0) {
+            container.innerHTML = "<p style='text-align:center; color:var(--text-muted); padding:15px;'>لا توجد منشورات حالياً.</p>";
+            return;
+        }
+
+        posts.forEach(post => {
+            const card = document.createElement("div");
+            card.className = "forum-post-card";
+            card.innerHTML = `
+                <div class="forum-post-header">
+                    <div>
+                        <span class="admin-badge">${escapeText(post.author || "مسؤول الشعبة")}</span>
+                    </div>
+                    <span class="forum-post-time">${escapeText(post.time)}</span>
                 </div>
-                <span class="forum-post-time">${post.time}</span>
-            </div>
-            <div class="forum-post-content">${post.content}</div>
-        `;
-        container.appendChild(card);
-    });
+                <div class="forum-post-content">${formatForumText(post.content)}</div>
+            `;
+            container.appendChild(card);
+        });
+    } catch (error) {
+        container.innerHTML = `<p style="text-align:center; color:var(--color-alert); padding:15px;">تعذر تحميل المنشورات حالياً، تأكد من الاتصال بالإنترنت.</p>`;
+    }
 }
 
 
