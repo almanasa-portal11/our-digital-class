@@ -890,7 +890,7 @@ async function renderRecordings() {
                     ${date ? `<br>📅 <strong>التاريخ:</strong> ${date}` : ''}
                 </p>
                 <a href="${rawUrl}" target="_blank" class="btn-primary" style="display: block; text-align: center; text-decoration: none;">
-                    ▶️ مشاهدة الحصة مباشرة على يوتيوب
+                     مشاهدة الحصة
                 </a>
             `;
             container.appendChild(card);
