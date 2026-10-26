@@ -1,43 +1,92 @@
-// قائمة المعلمين والمواد الرسمية لشعب 11 علمي (جـ + د) مع حسابات التيمز
-const teachersData = {
-    math: { subject: "الرياضيات", name: "أ. محمود عبدالله صادق قط", email: "851991570g@vgaza.edu.ps" },
+// ====================================================================
+// بيانات الشعب: (جـ + د) و (ه + و) — المعلمون والجدول ورابط الحصص المباشرة
+// ====================================================================
+
+// معلمون مشتركون بين الشعبتين
+const sharedTeachers = {
     arabic: { subject: "اللغة العربية", name: "أ. ملاك علي محمد هرماس السعدة", email: "407323450g@vgaza.edu.ps" },
-    chemistry: { subject: "الكيمياء", name: "أ. داليا نمر محمد جبريل", email: "410246987g@vgaza.edu.ps" },
     english: { subject: "اللغة الإنجليزية", name: "أ. رامي عبد الرؤوف إسماعيل القيسي", email: "989431689g@vgaza.edu.ps" },
     islamic: { subject: "التربية الإسلامية", name: "أ. ريمة عزمي صبري الدويك", email: "989430830g@vgaza.edu.ps" },
     physics: { subject: "الفيزياء", name: "أ. مراد عبد المجيد محمود أبو عرة", email: "908128861g@vgaza.edu.ps" },
-    biology: { subject: "الأحياء (العلوم الحياتية)", name: "أ. نديم حمدالله جميل بصلات", email: "851706523g@vgaza.edu.ps" },
-    tech: { subject: "التكنولوجيا", name: "أ. لمى محمود عتيلي", email: "411979693g@vgaza.edu.ps" }
+    biology: { subject: "الأحياء (العلوم الحياتية)", name: "أ. نديم حمدالله جميل بصلات", email: "851706523g@vgaza.edu.ps" }
 };
 
-// جدول الحصص الأسبوعي الرسمي لشعب 11 علمي (جـ + د)
-const weeklySchedule = {
-    Sunday: [
-        { subject: "الأحياء", teacher: teachersData.biology.name, time: "02:40 - 03:30", section: "جـ + د" },
-        { subject: "اللغة العربية", teacher: teachersData.arabic.name, time: "03:35 - 04:25", section: "جـ + د" },
-        { subject: "الرياضيات", teacher: teachersData.math.name, time: "04:30 - 05:15", section: "جـ + د" }
-    ],
-    Monday: [
-        { subject: "اللغة الإنجليزية", teacher: teachersData.english.name, time: "02:40 - 03:30", section: "جـ + د" },
-        { subject: "التربية الإسلامية", teacher: teachersData.islamic.name, time: "03:35 - 04:25", section: "جـ + د" },
-        { subject: "الرياضيات", teacher: teachersData.math.name, time: "04:30 - 05:15", section: "جـ + د" }
-    ],
-    Tuesday: [
-        { subject: "الأحياء", teacher: teachersData.biology.name, time: "02:40 - 03:30", section: "جـ + د" },
-        { subject: "التكنولوجيا", teacher: teachersData.tech.name, time: "03:35 - 04:25", section: "جـ + د" },
-        { subject: "الكيمياء", teacher: teachersData.chemistry.name, time: "04:30 - 05:15", section: "جـ + د" }
-    ],
-    Wednesday: [
-        { subject: "اللغة الإنجليزية", teacher: teachersData.english.name, time: "02:40 - 03:30", section: "جـ + د" },
-        { subject: "اللغة العربية", teacher: teachersData.arabic.name, time: "03:35 - 04:25", section: "جـ + د" },
-        { subject: "الرياضيات", teacher: teachersData.math.name, time: "04:30 - 05:15", section: "جـ + د" }
-    ],
-    Thursday: [
-        { subject: "الفيزياء", teacher: teachersData.physics.name, time: "02:40 - 03:30", section: "جـ + د" },
-        { subject: "الفيزياء", teacher: teachersData.physics.name, time: "03:35 - 04:25", section: "جـ + د" },
-        { subject: "الكيمياء", teacher: teachersData.chemistry.name, time: "04:30 - 05:15", section: "جـ + د" }
-    ]
+// أسماء المواد المختصرة في جدول الحصص
+const subjectShortNames = {
+    math: "الرياضيات", arabic: "اللغة العربية", chemistry: "الكيمياء", english: "اللغة الإنجليزية",
+    islamic: "التربية الإسلامية", physics: "الفيزياء", biology: "الأحياء", tech: "التكنولوجيا"
 };
+
+// أوقات الحصص (بتوقيت فلسطين) — نفسها للشعبتين
+const periodTimes = ["02:40 - 03:30", "03:35 - 04:25", "04:30 - 05:15"];
+
+const sections = {
+    jd: {
+        label: "جـ + د",
+        match: "ج+د", // القيمة التي تكتبها في عمود "الشعبة" داخل جداول جوجل
+        teams: "https://teams.microsoft.com/meet/389003714760497?p=XkQG3P98ySlSeiD3YS",
+        teachers: {
+            math: { subject: "الرياضيات", name: "أ. محمود عبدالله صادق قط", email: "851991570g@vgaza.edu.ps" },
+            arabic: sharedTeachers.arabic,
+            chemistry: { subject: "الكيمياء", name: "أ. داليا نمر محمد جبريل", email: "410246987g@vgaza.edu.ps" },
+            english: sharedTeachers.english,
+            islamic: sharedTeachers.islamic,
+            physics: sharedTeachers.physics,
+            biology: sharedTeachers.biology,
+            tech: { subject: "التكنولوجيا", name: "أ. لمى محمود عتيلي", email: "411979693g@vgaza.edu.ps" }
+        },
+        layout: {
+            Sunday: ["biology", "arabic", "math"],
+            Monday: ["english", "islamic", "math"],
+            Tuesday: ["biology", "tech", "chemistry"],
+            Wednesday: ["english", "arabic", "math"],
+            Thursday: ["physics", "physics", "chemistry"]
+        }
+    },
+    hw: {
+        label: "هـ + و",
+        match: "ه+و",
+        teams: "https://teams.microsoft.com/meet/350155334864272?p=WVbqB3otvDAWgWUfjT",
+        teachers: {
+            math: { subject: "الرياضيات", name: "أ. لبنى لبيب أحمد نعيرات", email: "852604628g@vgaza.edu.ps" },
+            arabic: sharedTeachers.arabic,
+            chemistry: { subject: "الكيمياء", name: "أ. نبيل شوقي ذياب بني عودة", email: "907544191g@vgaza.edu.ps" },
+            english: sharedTeachers.english,
+            islamic: sharedTeachers.islamic,
+            physics: sharedTeachers.physics,
+            biology: sharedTeachers.biology,
+            tech: { subject: "التكنولوجيا", name: "أ. سالم إبراهيم سالم حروب", email: "906928882g@vgaza.edu.ps" }
+        },
+        layout: {
+            Sunday: ["physics", "physics", "math"],
+            Monday: ["tech", "english", "chemistry"],
+            Tuesday: ["english", "biology", "arabic"],
+            Wednesday: ["arabic", "islamic", "math"],
+            Thursday: ["chemistry", "math", "biology"]
+        }
+    }
+};
+
+// بناء جدول الحصص الأسبوعي لشعبة معينة
+function buildWeeklySchedule(sec) {
+    const result = {};
+    Object.keys(sec.layout).forEach(day => {
+        result[day] = sec.layout[day].map((key, i) => ({
+            subject: subjectShortNames[key],
+            teacher: sec.teachers[key].name,
+            time: periodTimes[i],
+            section: sec.label
+        }));
+    });
+    return result;
+}
+
+// الشعبة الحالية (تتغير حسب اختيار الطالب)
+const DEFAULT_SECTION = "jd";
+let currentSectionKey = DEFAULT_SECTION;
+let currentSection = sections[DEFAULT_SECTION];
+let teachersData = currentSection.teachers;
+let weeklySchedule = buildWeeklySchedule(currentSection);
 
 // منشورات المنتدى الرسمية
 const forumPosts = [
@@ -45,14 +94,16 @@ const forumPosts = [
         id: 101,
         author: "مسؤول الشعبة",
         time: "إعلان رسمي",
-        content: " أهلاً وسهلاً بجميع طلاب شعبتنا (جـ + د) في موقعنا الموحد. نرجو المتابعة اليومية لجدول الحصص والواجبات.",
+        section: "all",
+        content: "📢 أهلاً وسهلاً بجميع طلاب الشعبتين (جـ + د) و (ه + و) في موقعنا الموحد. نرجو المتابعة اليومية لجدول الحصص والواجبات.",
         reactions: { like: 0, idea: 0, grad: 0 }
     },
     {
         id: 102,
         author: "مسؤول الشعبة",
         time: "إعلان رسمي",
-        content: " تذكير: تم إرفاق جميع روابط ودلائل استخدام منصة التيمز والايسكول والموقع التقني في قسم الخدمات والمساعدة.",
+        section: "all",
+        content: "📝 تذكير: تم إرفاق جميع روابط ودلائل استخدام منصة التيمز والايسكول والموقع التقني في قسم الخدمات والمساعدة.",
         reactions: { like: 0, idea: 0, grad: 0 }
     }
 ];
@@ -155,7 +206,198 @@ function convertScheduleTime(range, dayName) {
     }
 }
 
+// ====================================================================
+// اختيار الشعبة (جـ + د) / (ه + و) وحفظها على جهاز الطالب
+// ====================================================================
+function injectSectionStyles() {
+    if (document.getElementById("section-picker-styles")) return;
+    const style = document.createElement("style");
+    style.id = "section-picker-styles";
+    style.textContent = `
+        #section-modal { z-index: 10000; }
+        .section-choices { display: flex; gap: 12px; margin: 8px 0 14px; }
+        .section-choice {
+            flex: 1;
+            padding: 18px 8px;
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary-blue);
+            background: #f8fafc;
+            border: 2px solid var(--accent-blue);
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background-color 0.2s ease, color 0.2s ease;
+        }
+        .section-choice.selected,
+        .section-choice:active {
+            background: var(--primary-blue);
+            color: #ffffff;
+            border-color: var(--primary-blue);
+        }
+        .section-cancel {
+            background: none;
+            border: none;
+            color: var(--text-muted);
+            font-weight: 600;
+            cursor: pointer;
+            padding: 8px;
+        }
+    `;
+    document.head.appendChild(style);
+}
+
+function showSectionPicker(canClose) {
+    let overlay = document.getElementById("section-modal");
+    if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.className = "modal-overlay";
+        overlay.id = "section-modal";
+        overlay.innerHTML = `
+            <div class="modal-card" style="text-align:center;">
+                <h3 style="color: var(--primary-blue); margin-bottom: 6px;">اختر شعبتك</h3>
+                <p style="color: var(--text-muted); font-size: 0.9rem; margin-bottom: 14px;">
+                    سيتم عرض الجدول والواجبات والتسجيلات والإشعارات الخاصة بشعبتك فقط
+                </p>
+                <div class="section-choices">
+                    <button type="button" class="section-choice" data-section="jd">${sections.jd.label}</button>
+                    <button type="button" class="section-choice" data-section="hw">${sections.hw.label}</button>
+                </div>
+                <button type="button" class="section-cancel">إلغاء</button>
+            </div>
+        `;
+        document.body.appendChild(overlay);
+        overlay.querySelectorAll(".section-choice").forEach(btn => {
+            btn.addEventListener("click", () => chooseSection(btn.getAttribute("data-section")));
+        });
+        overlay.querySelector(".section-cancel").addEventListener("click", () => {
+            overlay.classList.remove("active");
+        });
+    }
+
+    overlay.querySelector(".section-cancel").style.display = canClose ? "inline-block" : "none";
+    overlay.querySelectorAll(".section-choice").forEach(btn => {
+        btn.classList.toggle("selected", canClose && btn.getAttribute("data-section") === currentSectionKey);
+    });
+    overlay.classList.add("active");
+}
+
+function applySection(key) {
+    if (!sections[key]) key = DEFAULT_SECTION;
+    currentSectionKey = key;
+    currentSection = sections[key];
+    teachersData = currentSection.teachers;
+    weeklySchedule = buildWeeklySchedule(currentSection);
+
+    const badge = document.querySelector(".badge-section");
+    if (badge) {
+        badge.textContent = `الصف 11 علمي (${currentSection.label}) ▾`;
+        badge.title = "تغيير الشعبة";
+        badge.style.cursor = "pointer";
+        if (!badge.getAttribute("data-bound")) {
+            badge.setAttribute("data-bound", "1");
+            badge.addEventListener("click", () => showSectionPicker(true));
+        }
+    }
+
+    const modalBadge = document.getElementById("modal-section-badge");
+    if (modalBadge) modalBadge.textContent = `الشعبة ${currentSection.label}`;
+}
+
+// تسجيل شعبة الطالب كوسم (tag) في OneSignal لتصله إشعارات شعبته فقط
+function tagOneSignalSection(key) {
+    window.OneSignalDeferred = window.OneSignalDeferred || [];
+    window.OneSignalDeferred.push(function (OneSignal) {
+        try { OneSignal.User.addTag("section", key); } catch (e) { /* تجاهل */ }
+    });
+}
+
+function initSection() {
+    injectSectionStyles();
+    let saved = null;
+    try { saved = localStorage.getItem("studentSection"); } catch (e) { /* تجاهل */ }
+
+    if (saved && sections[saved]) {
+        applySection(saved);
+        tagOneSignalSection(saved);
+    } else {
+        applySection(DEFAULT_SECTION);
+        showSectionPicker(false); // أول زيارة: يجب اختيار الشعبة
+    }
+}
+
+function refreshSectionContent() {
+    const activeTab = document.querySelector(".day-tab.active");
+    const day = activeTab ? activeTab.getAttribute("data-day") : "Sunday";
+    renderSchedule(day);
+    renderHomework();
+    renderTeachers();
+    renderForumPosts();
+    renderRecordings();
+}
+
+function chooseSection(key) {
+    if (!sections[key]) return;
+    try { localStorage.setItem("studentSection", key); } catch (e) { /* تجاهل */ }
+    applySection(key);
+    tagOneSignalSection(key);
+    refreshSectionContent();
+
+    const overlay = document.getElementById("section-modal");
+    if (overlay) overlay.classList.remove("active");
+}
+
+// هل الصف (واجب/تسجيل) مخصص لشعبة الطالب؟ الفارغ أو "الكل" = لجميع الشعب
+function normalizeSectionText(v) {
+    return String(v || "").replace(/[\s\u0640]/g, "").toLowerCase();
+}
+
+function matchesSection(value) {
+    const v = normalizeSectionText(value);
+    if (v === "") return true;
+    const target = normalizeSectionText(currentSection.match);
+    return v.split(/[,،;؛|\/]/).some(p => p === "الكل" || p === "all" || p === target);
+}
+
+// قراءة ملف CSV بشكل سليم (يدعم الفواصل داخل النصوص والأسطر المتعددة)
+function parseCSV(text) {
+    const rows = [];
+    let row = [];
+    let field = "";
+    let inQuotes = false;
+    text = String(text || "").replace(/^\uFEFF/, "");
+
+    for (let i = 0; i < text.length; i++) {
+        const c = text[i];
+        if (inQuotes) {
+            if (c === '"') {
+                if (text[i + 1] === '"') { field += '"'; i++; }
+                else inQuotes = false;
+            } else {
+                field += c;
+            }
+        } else if (c === '"') {
+            inQuotes = true;
+        } else if (c === ",") {
+            row.push(field);
+            field = "";
+        } else if (c === "\n" || c === "\r") {
+            if (c === "\r" && text[i + 1] === "\n") i++;
+            row.push(field);
+            field = "";
+            if (row.some(v => v.trim() !== "")) rows.push(row);
+            row = [];
+        } else {
+            field += c;
+        }
+    }
+    row.push(field);
+    if (row.some(v => v.trim() !== "")) rows.push(row);
+    return rows;
+}
+
 document.addEventListener("DOMContentLoaded", () => {
+    initSection(); // تحميل شعبة الطالب المحفوظة (أو عرض نافذة الاختيار)
+
     const days = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
     const now = new Date();
     let todayName = days[now.getDay()];
@@ -246,6 +488,8 @@ function openModal(period, day) {
     document.getElementById("modal-subject-title").textContent = period.subject;
     document.getElementById("modal-teacher").textContent = period.teacher;
     document.getElementById("modal-time").textContent = day ? convertScheduleTime(period.time, day) : period.time;
+    const teamsBtn = document.querySelector("#class-modal .btn-join-teams");
+    if (teamsBtn) teamsBtn.href = currentSection.teams;
     document.getElementById("class-modal").classList.add("active");
 }
 
@@ -263,7 +507,7 @@ async function renderHomework() {
         const response = await fetch(sheetCSVUrl);
         const data = await response.text();
 
-        const rows = data.split("\n").slice(1);
+        const rows = parseCSV(data).slice(1);
         const completedTasks = JSON.parse(localStorage.getItem("completedHomework")) || [];
 
         hwContainer.innerHTML = "";
@@ -271,8 +515,7 @@ async function renderHomework() {
         let hasTasks = false;
 
         rows.forEach(row => {
-            if (!row.trim()) return;
-            const cols = row.split(",");
+            const cols = row;
             const id = cols[0]?.trim();
             const subject = cols[1]?.trim();
             const teacher = cols[2]?.trim();
@@ -280,6 +523,7 @@ async function renderHomework() {
             const deadline = cols[4]?.trim();
 
             if (!id || isNaN(Number(id))) return;
+            if (!matchesSection(cols[5])) return; // عمود "الشعبة"
             hasTasks = true;
 
             const numericId = Number(id);
@@ -344,7 +588,9 @@ function renderForumPosts() {
 
     container.innerHTML = "";
 
-    forumPosts.forEach(post => {
+    forumPosts
+        .filter(post => !post.section || post.section === "all" || post.section === currentSectionKey)
+        .forEach(post => {
         const card = document.createElement("div");
         card.className = "forum-post-card";
         card.innerHTML = `
@@ -515,6 +761,8 @@ async function handleSupportSubmit(e) {
     resultDiv.style.display = "none";
 
     const formData = new FormData(form);
+    formData.set("subject", `بلاغ جديد من موقع شعبتنا الرقمية (${currentSection.label})`);
+    formData.append("section", currentSection.label);
 
     try {
         const response = await fetch("https://api.web3forms.com/submit", {
@@ -587,14 +835,13 @@ async function renderRecordings() {
     try {
         const response = await fetch(recordingsCSVUrl);
         const data = await response.text();
-        const rows = data.split("\n").slice(1);
+        const rows = parseCSV(data).slice(1);
         container.innerHTML = "";
 
         let count = 0;
 
         rows.forEach(row => {
-            if (!row.trim()) return;
-            const cols = row.split(",");
+            const cols = row;
             const subject = cols[0]?.trim();
             const title = cols[1]?.trim();
             const teacher = cols[2]?.trim();
@@ -602,6 +849,7 @@ async function renderRecordings() {
             const date = cols[4]?.trim();
 
             if (!subject || !rawUrl) return;
+            if (!matchesSection(cols[5])) return; // عمود "الشعبة"
 
             count++;
             const card = document.createElement("div");
